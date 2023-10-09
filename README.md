@@ -2,7 +2,7 @@
 ## Version 1.0
 ### Intended use
 This attestation generator is intended for use by anesthesiologists @ UZ Gent. 
-To comply with GDPR regulations, all patient-related data is kept locally at thedevice of the end-user.
+To comply with GDPR regulations, all patient-related data is kept locally at the device of the end-user.
 
 ### How to use this software
 
