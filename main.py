@@ -19,14 +19,7 @@ images = convert_from_path(attest_path)
 for i in range(len(images)):
     # Save pages as images in the pdf
     images[i].save('page' + str(i) + '.jpg', 'JPEG')
-
-#conn = psycopg2.connect(
-#    host="localhost",
-#    database="ANASTHASIA",
-#    user="postgres",
-#    password="postgres")
-
-#cursor = conn.cursor()
+    
 def generate_sugammadex_attestation(attestnr, patient_name, patient_id, prescriber_first_name, prescriber_last_name, riziv, datum, weight, dosage_schema,flacons, reason):
 #creating a new canvas
     #theoretical maximum weight corresponding to number of flacons distributed.
@@ -171,24 +164,10 @@ for index, row in worksheet.iterrows():
         #fields = "riziv_nr, qualification_code"
         #table = "anesthesie_uzgent"
         #conditions = f"first_name = '{prescriber_first_name}' AND last_name = '{prescriber_last_name}'"
-
-#       query = (f"SELECT {fields} "
-#               f"FROM {table} "
-#               f"WHERE {conditions};")
-#
-#       cursor.execute(query)
-#       riziv = cursor.fetchone()
-        riziv = user_RIZIV
-#       reason_query = """
-#       SELECT reason FROM sugammadex_attestation
-#       ORDER BY random()
-#       LIMIT 1;
-#       """
-#
-#       cursor.execute(reason_query)
-#       reason = cursor.fetchone()[0]
+        
         reason = "Restcurarisatie"
-#       try:
+        
+        try:
         generate_sugammadex_attestation(attestnr, patient_name=patient_name, patient_id=patient_INSZ, prescriber_first_name=prescriber_first_name, prescriber_last_name=prescriber_last_name, riziv=riziv, datum=operation_date, dosage_schema=DOSAGE, weight= patient_weight, flacons = aantal_flacons, reason=reason)
         #except TypeError:
         #    print(f"Missing database entry for {prescriber_last_name} {prescriber_first_name}")
