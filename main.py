@@ -168,11 +168,11 @@ for index, row in worksheet.iterrows():
         reason = "Restcurarisatie"
         
         try:
-        generate_sugammadex_attestation(attestnr, patient_name=patient_name, patient_id=patient_INSZ, prescriber_first_name=prescriber_first_name, prescriber_last_name=prescriber_last_name, riziv=riziv, datum=operation_date, dosage_schema=DOSAGE, weight= patient_weight, flacons = aantal_flacons, reason=reason)
-        #except TypeError:
-        #    print(f"Missing database entry for {prescriber_last_name} {prescriber_first_name}")
-        print("GENERATED")
-        pdfMerge.append(f"{prescriber_last_name}{prescriber_first_name}_{attestnr}.pdf")
+            generate_sugammadex_attestation(attestnr, patient_name=patient_name, patient_id=patient_INSZ, prescriber_first_name=prescriber_first_name, prescriber_last_name=prescriber_last_name, riziv=riziv, datum=operation_date, dosage_schema=DOSAGE, weight= patient_weight, flacons = aantal_flacons, reason=reason)
+            #except TypeError:
+            #    print(f"Missing database entry for {prescriber_last_name} {prescriber_first_name}")
+            print("GENERATED")
+            pdfMerge.append(f"{prescriber_last_name}{prescriber_first_name}_{attestnr}.pdf")
     else:
         pass
 
