@@ -1,7 +1,5 @@
 import random
 
-import psycopg2
-
 from urllib.request import urlopen
 from reportlab.lib.pagesizes import A4
 from reportlab.pdfgen.canvas import Canvas
@@ -13,13 +11,6 @@ from math import ceil
 import json
 from pdf2image import convert_from_path
 from reportlab.lib.colors import purple
-attest_path = "source/bridion.pdf"
-images = convert_from_path(attest_path)
-
-for i in range(len(images)):
-    # Save pages as images in the pdf
-    images[i].save('page' + str(i) + '.jpg', 'JPEG')
-    
 def generate_sugammadex_attestation(attestnr, patient_name, patient_id, prescriber_first_name, prescriber_last_name, riziv, datum, weight, dosage_schema,flacons, reason):
 #creating a new canvas
     #theoretical maximum weight corresponding to number of flacons distributed.
@@ -32,7 +23,7 @@ def generate_sugammadex_attestation(attestnr, patient_name, patient_id, prescrib
     canvas = Canvas(f"{prescriber_last_name}{prescriber_first_name}_{attestnr}.pdf", pagesize=A4)
     page_width, page_height = canvas._pagesize
     canvas.setFont("Courier", 13)
-    canvas.drawImage('page0.jpg', x=0, y=0, width=page_width, height=page_height)
+    canvas.drawImage('static/page0.jpg', x=0, y=0, width=page_width, height=page_height)
     canvas.drawString(0.8 * cm, 25 * cm, str(patient_name), charSpace=2.8)
     canvas.drawString(0.8 * cm, 24.3 * cm, str(patient_id), charSpace=2.8)
 
@@ -75,7 +66,7 @@ def generate_sugammadex_attestation(attestnr, patient_name, patient_id, prescrib
 
     canvas.showPage()
     canvas.setFont("Courier", 13)
-    canvas.drawImage('page1.jpg', x=0, y=0, width=page_width, height=page_height)
+    canvas.drawImage('static/page1.jpg', x=0, y=0, width=page_width, height=page_height)
     canvas.drawString(0.8 * cm, 16.12 * cm, f"{prescriber_last_name}", charSpace=2.8)
     canvas.drawString(0.8 * cm, 15.45 * cm, f"{prescriber_first_name}", charSpace=2.8)
     canvas.drawString(2.15 * cm, 14.7 * cm, f"{riziv_case[0:5]}", charSpace=2.8)
@@ -86,9 +77,8 @@ def generate_sugammadex_attestation(attestnr, patient_name, patient_id, prescrib
     canvas.drawString(3.3 * cm, 14.0 * cm, operation_date_year, charSpace=2.8)
     canvas.save()
 
-worksheet = pd.read_excel("source/juni 2023.xlsx", engine='openpyxl', sheet_name="Sheet1")
-worksheet=worksheet[worksheet['DESCRIPTION'] == "BRIDION 200 MG/2 ML FLAC"]
-
+worksheet = pd.read_excel("source/attesten november.xlsx", engine='openpyxl', sheet_name="Sheet1")
+worksheet=worksheet[(worksheet['DESCRIPTION'] == "BRIDION 200 MG/2 ML FLAC") | (worksheet['DESCRIPTION'] == "SUGAMMADEX 200MG FL")]
 user_first_name = input("What is your first name?: ")
 user_last_name = input("What is your last name?: ")
 user_RIZIV = input("Type your full riziv number: ")
@@ -168,14 +158,17 @@ for index, row in worksheet.iterrows():
         reason = "Restcurarisatie"
         
         try:
-            generate_sugammadex_attestation(attestnr, patient_name=patient_name, patient_id=patient_INSZ, prescriber_first_name=prescriber_first_name, prescriber_last_name=prescriber_last_name, riziv=riziv, datum=operation_date, dosage_schema=DOSAGE, weight= patient_weight, flacons = aantal_flacons, reason=reason)
+            print("entered try block")
+            generate_sugammadex_attestation(attestnr, patient_name=patient_name, patient_id=patient_INSZ, prescriber_first_name=prescriber_first_name, prescriber_last_name=prescriber_last_name, riziv=user_RIZIV, datum=operation_date, dosage_schema=DOSAGE, weight= patient_weight, flacons = aantal_flacons, reason=reason)
             #except TypeError:
             #    print(f"Missing database entry for {prescriber_last_name} {prescriber_first_name}")
-            print("GENERATED")
             pdfMerge.append(f"{prescriber_last_name}{prescriber_first_name}_{attestnr}.pdf")
+
+        except ValueError:
+            print("error")
     else:
         pass
 
-pdfMerge.write(f"{prescriber_first_name}_{prescriber_last_name}_merged.pdf")
+    pdfMerge.write(f"{user_first_name}_{user_last_name}_merged.pdf")
 
 
